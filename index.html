@@ -101,7 +101,9 @@ section[data-view]{display:grid;gap:36px}
 .ls{font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .ls.on{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
 #loopcv{width:100%;height:clamp(240px,32vw,380px);display:block;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
-.loop-foot{display:flex;justify-content:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.loop-foot{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.loop-btn{font:inherit;font-size:12px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.loop-btn:hover{border-color:var(--accent)}
 .loop-note{font-size:13px;color:var(--muted)}
 .loop-note button{font:inherit;font-size:13px;margin-left:8px;padding:6px 12px;border-radius:6px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--ink);cursor:pointer}
 
@@ -368,8 +370,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
       <span><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><circle cx="7" cy="7" r="4" fill="var(--tool)"/><circle cx="19" cy="7" r="4" fill="var(--tool)"/></svg>Correction</span>
       <span><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 4 H25 M1 10 H25" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="4 3"/></svg>Target channel</span>
     </div>
-    <div class="loop-foot"><span id="looperr">Depth error: 100%</span></div>
-    <p class="loop-note" id="looprm" hidden>Animations are reduced on your device. <button type="button" id="loopplay">Play animation</button></p>
+    <div class="loop-foot"><span id="looperr">Depth error: 100%</span><button type="button" id="loopplay" class="loop-btn" aria-pressed="false">Pause</button></div>
   </section>
 
   <div class="pillars">
@@ -822,10 +823,12 @@ function draw(){
   const shown=Math.round((cyc>=0.92?next:err)*100);
   document.getElementById('looperr').textContent=label+' \u00b7 Overcut at bends: '+shown+'%';
 }
-function loop(){t+=1/60;draw();requestAnimationFrame(loop);}
+function loop(){if(!running)return;t+=1/60;draw();requestAnimationFrame(loop);}
 function start(){if(running)return;running=true;loop();}
+function stop(){running=false;}
 size();
-if(reduce){document.getElementById('looprm').hidden=false;draw();document.getElementById('loopplay').addEventListener('click',function(){this.disabled=true;this.textContent='Playing';start();});}else start();
+const pb=document.getElementById('loopplay');pb.addEventListener('click',function(){if(running){stop();this.textContent='Play';this.setAttribute('aria-pressed','true');}else{start();this.textContent='Pause';this.setAttribute('aria-pressed','false');}});
+start();
 addEventListener('hashchange',()=>{setTimeout(()=>{size();draw();},0)});
 })();
 </script>
