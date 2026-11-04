@@ -1,0 +1,833 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SMITHY Lab IITH</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,300;0,400;0,700;1,300&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap">
+<style>
+/* Layout: sticky lab-name bar + nav (Google Sites pattern), one view per hash route, 1100px column */
+:root{
+  --bg:#f5f6f7; --surface:#ffffff; --ink:#1c1c1c; --muted:#566370; --line:#d9dee3;
+  --accent:#c4520f; --accent-soft:#fbeadf; --steel:#1f3a52; --steel-ink:#eef3f7;
+  --title:#0041a5; --teal:#0f8a66; --tool:#2f6db5; --defect:#b4235a;
+  --display:"Arimo",Arial,sans-serif; --body:"Arimo",Arial,sans-serif; --mono:"Arimo",Arial,sans-serif;
+  --person:"Nunito",Arial,sans-serif; --person-body:"Nunito Sans",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1418; --surface:#161d23; --ink:#e4e9ee; --muted:#9aa7b3; --line:#2a343d;
+  --accent:#f08a4b; --accent-soft:#2f1f15; --steel:#0b1c2a; --steel-ink:#e4edf4; --title:#8db4ff; --teal:#3fc69c; --tool:#7fb0e8; --defect:#f07a9e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1418; --surface:#161d23; --ink:#e4e9ee; --muted:#9aa7b3; --line:#2a343d;
+  --accent:#f08a4b; --accent-soft:#2f1f15; --steel:#0b1c2a; --steel-ink:#e4edf4; --title:#8db4ff; --teal:#3fc69c; --tool:#7fb0e8; --defect:#f07a9e; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+html{overflow-x:clip}
+.wrap{max-width:1360px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--title)} a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:clamp(2rem,4vw,2.8333rem);font-weight:700;color:var(--title);line-height:1.38}
+h3{font-size:1.1667rem;font-weight:700}
+p{margin:0;max-width:68ch}
+.label{font:500 .74rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);color:var(--ink);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:24px;flex-wrap:nowrap;padding-block:10px;max-width:none;padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;margin-right:auto}
+.brand svg{flex:none}
+.brand b{font:400 1.6667rem/1.2 var(--display)}
+.brand span{display:none}
+nav{display:flex;gap:0;flex-wrap:nowrap;margin-left:auto}
+nav a{color:inherit;text-decoration:none;font:400 1rem/1 var(--display);padding:12px 12px;border-radius:4px;opacity:.82;white-space:nowrap}
+nav a:hover{opacity:1;background:var(--bg)}
+nav a[aria-current="page"]{opacity:1;font-weight:700;box-shadow:inset 0 -2px 0 var(--accent)}
+.menu-btn{display:none;background:none;border:1px solid var(--line);color:inherit;border-radius:4px;padding:7px 12px;font:500 .85rem var(--body);cursor:pointer}
+@media (max-width:1180px){
+  .bar{flex-wrap:wrap}
+  .menu-btn{display:block;margin-left:auto}
+  nav{display:none;width:100%;flex-direction:column;padding-bottom:8px;margin-left:0}
+  nav.open{display:flex}
+  nav a{padding:12px 8px}
+}
+
+main{padding-block:44px 72px}
+footer .wrap,main.wrap{padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+@media (max-width:600px){footer .wrap,main.wrap,.bar{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+section[data-view]{display:grid;gap:36px}
+.page-head{display:grid;gap:10px;border-bottom:1px solid var(--line);padding-bottom:20px}
+.page-head p{color:var(--muted)}
+
+
+
+/* Lab mark */
+.logo .m-ring{stroke:var(--muted)}
+.logo .m-node{fill:var(--muted)}
+.logo .m-gear{fill:var(--ink)}
+.logo .m-hole{fill:var(--surface)}
+.logo .m-jet{stroke:var(--accent)}
+.logo .m-dot{fill:var(--accent)}
+.logo-banner .m-ring{stroke:var(--steel-ink);opacity:.6}
+.logo-banner .m-node,.logo-banner .m-gear{fill:var(--steel-ink)}
+.logo-banner .m-hole{fill:var(--steel)}
+.logo-banner{margin-bottom:6px}
+
+
+/* Why SMITHY */
+.why{display:grid;gap:20px;padding-top:12px;border-top:1px solid var(--line)}
+.why-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:860px){.why-grid{grid-template-columns:1fr}}
+.why-item{display:grid;gap:10px;align-content:start}
+.why-item p{font-size:.95rem;color:var(--muted);text-align:justify;hyphens:auto}
+.why-item b{color:var(--ink);font-weight:700}
+.why-pic{height:120px;display:flex;align-items:center;justify-content:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+.why-art{height:96px;width:auto}
+.why-pic .wordmark{width:auto;height:96px}
+.why-art .wa-fill{fill:var(--ink)}
+.why-art .wa-line{stroke:var(--ink)}
+.why-art .wa-acc{fill:var(--accent)}
+.why-art .wa-acc-s{stroke:var(--accent)}
+.wordmark.wm-page .w-fill{fill:var(--ink)}
+.wordmark.wm-page .w-fill-s{stroke:var(--ink)}
+.wordmark.wm-page .w-bg{fill:var(--surface)}
+.wordmark.wm-page .w-bg-s{stroke:var(--surface)}
+.wordmark.wm-page .w-ring{stroke:var(--muted);opacity:1}
+.wordmark.wm-page .w-node{fill:var(--surface);stroke:var(--ink)}
+.wordmark.wm-page .w-faint{stroke:var(--muted)}
+
+/* How we work loop */
+.loop-demo{display:grid;gap:12px}
+.loop-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px}
+.loop-steps{display:flex;gap:8px;flex-wrap:wrap}
+.ls{font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.ls.on{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+#loopcv{width:100%;height:clamp(240px,32vw,380px);display:block;border-radius:6px;background:var(--surface);border:1px solid var(--line)}
+.loop-foot{display:flex;justify-content:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.loop-note{font-size:13px;color:var(--muted)}
+.loop-note button{font:inherit;font-size:13px;margin-left:8px;padding:6px 12px;border-radius:6px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--ink);cursor:pointer}
+
+.skills{gap:14px}
+.skill-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:860px){.skill-levels{grid-template-columns:1fr}}
+.skill-level{display:grid;gap:10px;align-content:start;min-width:0}
+.if-note{font-size:.85rem;color:var(--muted);margin:0 0 4px}
+.w-full b{color:var(--steel-ink);font-weight:700}
+.acro{color:var(--ink)}
+.acro b{color:var(--accent);font-weight:800}
+img.portrait{object-fit:cover;object-position:center 30%;height:auto;display:block}
+/* SMITHY marks */
+.hicon{flex:none}
+.hicon .h-ring{stroke:var(--muted)}
+.hicon .h-node{fill:var(--surface);stroke:var(--ink)}
+.hicon .h-fill{fill:var(--ink)}
+.hicon .h-bg{fill:var(--surface)}
+.hicon .h-acc{fill:var(--accent)}
+.hicon .h-fill-s{stroke:var(--ink)}
+.hicon .h-bg-s{stroke:var(--surface)}
+.hicon .h-acc-s{stroke:var(--accent)}
+
+.emblem{flex:none}
+.emblem .e-line{stroke:var(--ink)}
+.emblem .e-ring{stroke:var(--muted)}
+.emblem .e-fill{fill:var(--ink)}
+.emblem .e-acc{fill:var(--accent)}
+.emblem .e-acc-s{stroke:var(--accent)}
+.emblem .e-bg{fill:var(--surface)}
+.w-name{line-height:0}
+.wordmark{width:min(680px,90vw);height:auto;display:block}
+.wordmark .w-fill{fill:var(--steel-ink)}
+.wordmark .w-fill-s{stroke:var(--steel-ink)}
+.wordmark .w-bg{fill:var(--steel)}
+.wordmark .w-bg-s{stroke:var(--steel)}
+.wordmark .w-acc{fill:var(--accent)}
+.wordmark .w-acc-s{stroke:var(--accent)}
+.wordmark .w-ring{stroke:var(--steel-ink);opacity:.7}
+.wordmark .w-node{fill:var(--steel);stroke:var(--steel-ink)}
+.wordmark .w-faint{stroke:var(--steel-ink);opacity:.4}
+/* LaMPS-style welcome banner */
+.welcome{position:relative;border-radius:0;overflow:hidden;margin-inline:calc(50% - 50vw);margin-top:-44px;background:var(--steel);color:var(--steel-ink);display:grid}
+.welcome canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.welcome-text{position:relative;display:grid;justify-items:center;align-content:start;text-align:center;gap:12px;padding:clamp(40px,6vw,72px) 20px clamp(48px,6vw,80px)}
+.w-kicker{font:italic 400 clamp(1.05rem,2vw,1.35rem)/1 var(--body);opacity:.85}
+.w-name{font-size:clamp(3.2rem,10vw,6.4rem);font-weight:800;font-stretch:80%;letter-spacing:.01em;line-height:.95}
+.w-full{font:500 clamp(.72rem,1.4vw,.85rem)/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.w-inst{font:600 clamp(1.05rem,2.2vw,1.45rem)/1.35 var(--display);font-stretch:95%;margin-top:6px}
+.w-inst br{display:block}
+.w-tag{font:italic 400 clamp(.98rem,1.7vw,1.12rem)/1.6 var(--body);opacity:.88;max-width:56ch;margin-top:4px}
+.lede{font:600 clamp(1.15rem,2vw,1.4rem)/1.45 var(--display);font-stretch:95%;text-align:center;max-width:52ch;margin:0 auto}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px;padding-top:4px}
+.talks .entry{display:grid;gap:6px;min-width:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag-inv,.tag-pre,.tag-par,.tag-award{font:500 .72rem/1 var(--mono);letter-spacing:.04em;padding:5px 8px;border-radius:999px;border:1.5px solid transparent;white-space:nowrap}
+.tag-inv{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.tag-pre{background:transparent;color:var(--accent);border-color:var(--accent)}
+.tag-par{background:var(--bg);color:var(--muted);border-color:var(--line)}
+.tag-award{background:var(--steel);color:var(--steel-ink);border-color:var(--steel)}
+
+.pi-card{display:grid;grid-template-columns:minmax(240px,320px) minmax(0,1fr);gap:clamp(32px,5vw,72px);align-items:start;padding-top:12px}
+.pi-side{display:grid;gap:22px;justify-items:start;position:sticky;top:calc(env(safe-area-inset-top,0px) + 96px)}
+.portrait{width:100%;max-width:280px;aspect-ratio:1;border-radius:50%;background:var(--steel);color:var(--steel-ink);display:grid;place-items:center;font:800 3.2rem var(--display);font-stretch:90%}
+.pi-id{display:grid;gap:6px;color:var(--muted);font-size:.95rem;line-height:1.5}
+.pi-name{font-size:1.45rem;font-weight:600;font-stretch:100%;color:var(--ink);line-height:1.2}
+.pi-role{color:var(--ink);font-style:italic;margin-block:6px}
+.pi-links{margin:8px 0 0;padding-left:1.1em;display:grid;gap:4px}
+.pi-main{display:grid;gap:16px;min-width:0;align-content:start}
+.pi-main>p{max-width:78ch}
+.pi-main h3{font-size:1.25rem;margin-top:18px}
+.pi-list{margin:0;padding-left:1.2em;display:grid;gap:10px;max-width:84ch}
+.pi-list b{font-weight:600;color:var(--ink)}
+.pi-list i{color:var(--ink)}
+
+
+/* Justified text, like Ctrl+J in Word */
+.pi-main>p,.pi-list li,.page-head p,.thread .body p,.welcome-text~p{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+@media (max-width:480px){.pi-main>p,.pi-list li,.page-head p,.thread .body p{text-align:left}}
+/* People typography (matched to LaMPS) */
+.pi-id{font-family:var(--person);font-weight:300;font-size:.8333rem;line-height:16px;color:var(--ink);gap:4px}
+.pi-name{font:300 1.1667rem/22.4px var(--person);color:var(--ink)}
+.pi-role{font-style:italic;font-weight:300;color:var(--ink);margin-block:12px}
+.pi-links a{color:var(--title)}
+.pi-main>p{font:300 1rem/22.08px var(--person-body);color:var(--muted)}
+.pi-main h3{font:600 1.1667rem/28px var(--person-body);color:var(--ink)}
+.pi-list{font:400 1rem/24px var(--person-body);color:var(--ink)}
+.pi-list b{font-weight:700}
+@media (max-width:760px){.pi-card{grid-template-columns:1fr}.pi-side{position:static;justify-items:center;text-align:center}.pi-links{list-style:none;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px}.portrait{max-width:220px}}
+/* home hero */
+.hero{background:var(--steel);color:var(--steel-ink);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:1.15fr 1fr}
+.hero-text{padding:clamp(24px,4vw,48px);display:grid;gap:16px;align-content:center}
+.hero-text .label{color:var(--steel-ink);opacity:.7}
+.hero h1{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:800;font-stretch:85%}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{opacity:.88;font-size:1.06rem}
+.hero canvas{width:100%;height:100%;min-height:260px;display:block}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero canvas{min-height:200px}}
+
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:860px){.pillars{grid-template-columns:1fr}}
+.pillar{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:24px;display:grid;gap:12px;align-content:start}
+.pillar .tag{font:500 .78rem var(--mono);color:var(--accent)}
+.pillar p{color:var(--muted);font-size:.96rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .74rem/1 var(--mono);padding:6px 8px;border-radius:3px;background:var(--accent-soft);color:var(--ink)}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.news{list-style:none;margin:0;padding:0;display:grid}
+.news li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;padding-block:12px;border-top:1px solid var(--line)}
+.news time{font:500 .8rem var(--mono);color:var(--accent);font-variant-numeric:tabular-nums;padding-top:3px}
+.aside{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;display:grid;gap:12px;align-content:start}
+
+/* research */
+.thread{display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px;padding-block:28px;border-top:1px solid var(--line)}
+.thread:first-of-type{border-top:0;padding-top:0}
+.thread .meta{display:grid;gap:8px;align-content:start}
+.thread .trl{font:500 .8rem var(--mono);color:var(--muted)}
+.thread .body{display:grid;gap:12px}
+.thread ul{margin:0;padding-left:1.1em;color:var(--muted);display:grid;gap:4px}
+@media (max-width:700px){.thread{grid-template-columns:1fr;gap:12px}}
+.arc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.arc div{padding:18px 20px;border-left:1px solid var(--line);display:grid;gap:6px}
+.arc div:first-child{border-left:0}
+.arc p{font-size:.92rem;color:var(--muted)}
+@media (max-width:700px){.arc{grid-template-columns:1fr}.arc div{border-left:0;border-top:1px solid var(--line)}.arc div:first-child{border-top:0}}
+
+/* people */
+.pi{display:grid;grid-template-columns:180px minmax(0,1fr);gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:26px}
+.avatar{width:100%;max-width:180px;aspect-ratio:4/5;border-radius:4px;background:var(--steel);color:var(--steel-ink);display:grid;place-items:center;font:800 2.6rem var(--display);font-stretch:90%}
+.pi .body{display:grid;gap:12px;min-width:0}
+.edu{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.edu li{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;font-size:.95rem}
+.edu b{font:500 .8rem var(--mono);color:var(--accent);padding-top:3px}
+@media (max-width:640px){.pi{grid-template-columns:1fr}}
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.slot{border:1px dashed var(--line);border-radius:6px;padding:20px;display:grid;gap:6px;color:var(--muted);font-size:.93rem}
+.slot h3{color:var(--ink)}
+
+/* lists */
+.entries{list-style:none;margin:0;padding:0;display:grid;counter-reset:n}
+.entries li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;padding-block:14px;border-top:1px solid var(--line)}
+.entries li::before{counter-increment:n;content:"[" counter(n) "]";font:500 .82rem var(--mono);color:var(--muted);padding-top:2px}
+.entries .venue{font-style:italic}
+.note{background:var(--accent-soft);border-radius:4px;padding:12px 16px;font-size:.92rem;max-width:none}
+.note b{font-weight:600}
+.yearhead{font:600 .85rem var(--mono);color:var(--accent);padding-top:8px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;display:grid;gap:10px;align-content:start}
+.card p,.card li{color:var(--muted);font-size:.95rem}
+.card ul{margin:0;padding-left:1.1em;display:grid;gap:4px}
+
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.95rem}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .74rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+td code{font:500 .85rem var(--mono);color:var(--accent)}
+tr:last-child td{border-bottom:0}
+
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:760px){.contact{grid-template-columns:1fr}}
+.addr{font-style:normal;line-height:1.8}
+.copy{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.copy code{font:500 .92rem var(--mono);background:var(--bg);padding:6px 10px;border-radius:4px;border:1px solid var(--line);user-select:all}
+.copy button{font:500 .82rem var(--body);background:var(--steel);color:var(--steel-ink);border:0;border-radius:4px;padding:8px 12px;cursor:pointer}
+
+footer{border-top:1px solid var(--line);padding-block:22px;color:var(--muted);font-size:.85rem}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.lg{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+.lg span{display:inline-flex;align-items:center;gap:6px;padding:3px 8px 3px 4px;border-radius:999px;border:1px solid transparent}
+.lg span.active{border-color:var(--accent);color:var(--ink);background:var(--accent-soft, var(--chip))}
+
+</style>
+
+<style>
+.me{font-weight:600;color:var(--ink)}
+.status{font:500 .74rem var(--mono);color:var(--accent);white-space:nowrap}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{font:500 .82rem var(--mono);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:7px 10px;color:var(--ink);background:var(--surface)}
+.links a:hover{border-color:var(--accent);color:var(--accent)}
+.pubnav{display:flex;flex-wrap:wrap;gap:8px}
+.pubnav a{font:500 .8rem var(--body);text-decoration:none;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+.pubgroup{display:grid;gap:4px;scroll-margin-top:110px}
+.pubgroup h3{display:flex;gap:10px;align-items:baseline}
+.pubgroup h3 small{font:500 .78rem var(--mono);color:var(--muted)}
+.award{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;padding-block:10px;border-top:1px solid var(--line);font-size:.95rem}
+.award.exp{grid-template-columns:150px minmax(0,1fr)}
+@media (max-width:480px){.award.exp{grid-template-columns:1fr;gap:2px}}
+.award b{font:500 .8rem var(--mono);color:var(--accent);padding-top:3px;font-weight:500}
+.twocol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:760px){.twocol{grid-template-columns:1fr}}
+.stats{display:flex;flex-wrap:wrap;gap:28px;padding-top:6px}
+.stats div{display:grid;gap:2px}
+.stats b{font:800 1.9rem/1 var(--display);font-stretch:85%;color:var(--accent);font-variant-numeric:tabular-nums}
+.stats span{font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+</style>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#home" aria-label="SMITHY Lab home">
+      <svg class="hicon" width="40" height="40" viewBox="0 0 120 120" aria-hidden="true"><g class="h-fill-s" fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14 H112"/><path d="M20 14 V106"/><path d="M100 14 V106"/><path d="M20 14 L60 56 L100 14"/><path d="M60 14 V56"/><path d="M20 84 H100"/></g><path class="h-acc-s" d="M60 56 V84" stroke-width="8" stroke-linecap="round"/><path class="h-acc-s" d="M30 99 C 42 89, 50 89, 60 99 C 70 109, 78 109, 90 99" fill="none" stroke-width="5" stroke-linecap="round"/></svg>
+      <div><b>SMITHY Lab @ IITH</b><span>Smart Manufacturing through Intelligent Twins and Hybrid Machining</span></div>
+    </a>
+    <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav">
+      <a href="#home">Home</a><a href="#research">Research</a><a href="#people">People</a><a href="#publications">Publications</a><a href="#patents">Patents</a><a href="#talks">Talks</a><a href="#opportunities">Opportunities</a><a href="#teaching">Teaching</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" lang="en">
+
+<!-- HOME -->
+<section data-view="home">
+  <div class="welcome">
+    <div class="welcome-text">
+      <span class="w-kicker">Welcome to the</span>
+      <h1 class="w-name"><svg class="wordmark" viewBox="0 0 396 130" role="img" aria-label="SMITHY Lab" overflow="visible"><g class="w-fill" font-family="Archivo, Arimo, Arial, sans-serif" font-weight="800" font-size="64" text-anchor="middle"><text x="20" y="76">S</text><text x="70" y="76">M</text><text x="174" y="76">T</text><text x="222" y="76">H</text></g><circle class="w-ring" cx="122" cy="52" r="17" fill="none" stroke-width="1.2" stroke-dasharray="2.4 2.4"/><g class="w-node" stroke-width="1.2"><circle cx="139" cy="52" r="2.2"/><circle cx="134" cy="64" r="2.2"/><circle cx="110" cy="64" r="2.2"/><circle cx="105" cy="52" r="2.2"/><circle cx="110" cy="40" r="2.2"/><circle cx="134" cy="40" r="2.2"/></g><path class="w-fill" transform="translate(100.4 30.4) scale(0.36)" d="M54.4 35.6 L56.1 29.2 L63.9 29.2 L65.6 35.6 L69.8 37.0 L74.9 32.8 L81.2 37.4 L78.9 43.6 L81.4 47.1 L88.0 46.8 L90.5 54.2 L84.9 57.8 L84.9 62.2 L90.5 65.8 L88.0 73.2 L81.4 72.9 L78.9 76.4 L81.2 82.6 L74.9 87.2 L69.8 83.0 L65.6 84.4 L63.9 90.8 L56.1 90.8 L54.4 84.4 L50.2 83.0 L45.1 87.2 L38.8 82.6 L41.1 76.4 L38.6 72.9 L32.0 73.2 L29.5 65.8 L35.1 62.2 L35.1 57.8 L29.5 54.2 L32.0 46.8 L38.6 47.1 L41.1 43.6 L38.8 37.4 L45.1 32.8 L50.2 37.0 Z"/><circle class="w-bg" cx="122" cy="52" r="3.6"/><path class="w-fill" d="M114 20 H130 L126 28 H118 Z"/><rect class="w-acc" x="120" y="28" width="4" height="53"/><path class="w-fill" transform="translate(101 61.2) scale(0.3)" d="M6 62 C 12 58, 20 56, 30 56 H58 C 64 56, 66 66, 70 66 C 74 66, 76 56, 82 56 H104 V68 L86 72 C 80 78, 80 84, 84 90 L96 96 H30 L40 90 C 44 84, 44 78, 40 72 L30 68 C 22 66, 14 64, 6 62 Z"/><line class="w-faint" x1="98" y1="92" x2="146" y2="92" stroke-width="0.8"/><path class="w-acc-s" transform="translate(101 122.8) scale(0.3 -0.3)" d="M6 62 C 12 58, 20 56, 30 56 H58 C 64 56, 66 66, 70 66 C 74 66, 76 56, 82 56 H104 V68 L86 72 C 80 78, 80 84, 84 90 L96 96 H30 L40 90 C 44 84, 44 78, 40 72 L30 68 C 22 66, 14 64, 6 62 Z" fill="none" stroke-width="3.6" stroke-dasharray="7 5" stroke-linejoin="round"/><line class="w-fill-s" x1="257" y1="31" x2="272" y2="55" stroke-width="9" stroke-linecap="round"/><line class="w-bg-s" x1="258.5" y1="33.5" x2="270.5" y2="52.5" stroke-width="9" stroke-dasharray="1.8 3.6"/><line class="w-acc-s" x1="292" y1="31" x2="277" y2="55" stroke-width="5" stroke-linecap="round"/><line class="w-fill-s" x1="274.5" y1="55" x2="274.5" y2="74" stroke-width="9" stroke-linecap="round"/><circle class="w-fill" cx="274.5" cy="55" r="5"/><circle class="w-acc" cx="274.5" cy="55" r="2.2"/><text class="w-fill" x="308" y="76" font-family="Arimo, Arial, sans-serif" font-weight="400" font-size="40" text-anchor="start">Lab</text></svg></h1>
+      <span class="w-full"><b>S</b>mart <b>M</b>anufacturing through <b>I</b>ntelligent <b>T</b>wins and <b>HY</b>brid Machining</span>
+      <span class="w-inst">Department of Mechanical &amp; Aerospace Engineering<br>Indian Institute of Technology Hyderabad (IITH)</span>
+      <p class="w-tag">…bridging physics-based understanding and data-driven intelligence, from manufacturing processes to machine tool condition monitoring. Grounded in physics, shaped by data…</p>
+    </div>
+  </div>
+
+  <p class="lede">We build hybrid models and digital twins that make machines and machining predictive, interpretable, controllable and autonomous.</p>
+
+  <div class="split">
+    <div style="display:grid;gap:14px;min-width:0">
+      <h2>News</h2>
+      <ul class="news">
+        <li><time datetime="2026-10">Oct 2026</time><span>PhD and M.Tech positions are open. See <a href="#opportunities">Opportunities</a>.</span></li>
+      </ul>
+    </div>
+    <aside class="aside">
+      <span class="label">Principal Investigator</span>
+      <h3>T N Deepu Kumar</h3>
+      <p style="color:var(--muted);font-size:.95rem">Assistant Professor, MAE, IIT Hyderabad. PhD, IIT Madras. M.Tech, IIT Guwahati.</p>
+      <div class="links">
+        <a href="https://scholar.google.com/citations?user=Rx4ChJkAAAAJ" target="_blank" rel="noopener">Scholar</a>
+        <a href="https://orcid.org/0000-0001-6112-067X" target="_blank" rel="noopener">ORCID</a>
+        <a href="https://www.linkedin.com/in/t-n-deepu-kumar-973004217/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <a href="#people">Full profile &rarr;</a>
+    </aside>
+  </div>
+
+
+  <section class="loop-demo" aria-labelledby="loop-h">
+    <div class="loop-head">
+      <h2 id="loop-h">How we work</h2>
+      <div class="loop-steps"><span class="ls" data-i="0">1 · Cut</span><span class="ls" data-i="1">2 · Sense</span><span class="ls" data-i="2">3 · Update twin</span><span class="ls" data-i="3">4 · Correct</span></div>
+    </div>
+    <canvas id="loopcv" aria-label="Animation: the SMITHY machine cuts a groove, sensor data flows to its digital twin, the twin compares the predicted groove with the target, and a correction flows back until the error shrinks"></canvas>
+    <div class="lg" aria-label="Legend">
+      <span data-tool="jet"><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><rect x="11" y="0" width="4" height="14" fill="var(--accent)"/></svg>Waterjet (bulk removal)</span>
+      <span data-tool="mill"><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><rect x="10" y="0" width="6" height="5" fill="var(--ink)"/><rect x="9" y="5" width="8" height="9" fill="var(--tool)"/><path d="M9 9 L17 6 M9 13 L17 10" stroke="var(--surface)" stroke-width="1.2"/></svg>End mill (finishing)</span>
+      <span><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7 H25" stroke="var(--defect)" stroke-width="7" stroke-linecap="round"/></svg>Overcut</span>
+      <span><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><circle cx="7" cy="7" r="4" fill="var(--teal)"/><circle cx="19" cy="7" r="4" fill="var(--teal)"/></svg>Sensor data</span>
+      <span><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><circle cx="7" cy="7" r="4" fill="var(--tool)"/><circle cx="19" cy="7" r="4" fill="var(--tool)"/></svg>Correction</span>
+      <span><svg width="26" height="14" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 4 H25 M1 10 H25" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="4 3"/></svg>Target channel</span>
+    </div>
+    <div class="loop-foot"><span id="looperr">Depth error: 100%</span></div>
+    <p class="loop-note" id="looprm" hidden>Animations are reduced on your device. <button type="button" id="loopplay">Play animation</button></p>
+  </section>
+
+  <div class="pillars">
+    <article class="pillar">
+      <span class="tag">Pillar 1 · Process</span>
+      <h3>Abrasive waterjet milling &amp; CAM</h3>
+      <p>Models that predict shallow-to-deep pocket geometry milled by abrasive waterjets in Ti-6Al-4V, combining CFD jet flow, erosion physics and physics-informed neural networks, packaged for CAM.</p>
+      <div class="chips"><span class="chip">Ti-6Al-4V</span><span class="chip">kerf profile</span><span class="chip">PINN</span></div>
+    </article>
+    <article class="pillar">
+      <span class="tag">Pillar 2 · Machine</span>
+      <h3>Cyber-physical machine tools</h3>
+      <p>Thermal error compensation and dynamics of high-speed motorized spindles, variable-preload spindles and damped boring bars, with PINN-based thermal reconstruction running on IIoT-connected controllers.</p>
+      <div class="chips"><span class="chip">motorized spindles</span><span class="chip">thermal drift</span><span class="chip">IIoT</span></div>
+    </article>
+    <article class="pillar">
+      <span class="tag">Pillar 3 · System</span>
+      <h3>Hybrid machining &amp; digital twins</h3>
+      <p>A tabletop hybrid machining centre combining milling with abrasive waterjet and suspension-jet modules, driven by end-to-end CAM and a process digital twin.</p>
+      <div class="chips"><span class="chip">hybrid machining</span><span class="chip">digital twin</span><span class="chip">Industry 4.0</span></div>
+    </article>
+  </div>
+
+  <div class="why">
+    <h2>Why SMITHY?</h2>
+    <div class="why-grid">
+      <article class="why-item">
+        <div class="why-pic"><svg class="why-art" viewBox="0 0 120 110" aria-hidden="true"><path class="wa-fill" d="M6 62 C 12 58, 20 56, 30 56 H58 C 64 56, 66 66, 70 66 C 74 66, 76 56, 82 56 H104 V68 L86 72 C 80 78, 80 84, 84 90 L96 96 H30 L40 90 C 44 84, 44 78, 40 72 L30 68 C 22 66, 14 64, 6 62 Z"/><path class="wa-fill" d="M62 6 H78 L74 16 H66 Z"/><rect class="wa-acc" x="68" y="16" width="4" height="48"/><g class="wa-acc"><circle cx="44" cy="38" r="3.5"/><circle cx="96" cy="38" r="3.5"/><circle cx="50" cy="24" r="2.6"/><circle cx="91" cy="22" r="2.6"/></g></svg></div>
+        <h3>The name</h3>
+        <p>A smithy is the smith's workshop, where metal is shaped through skill, heat and force. We shape materials with jets, spindles, sensors and physics-informed models. SMITHY stands for <span class="acro"><b>S</b>mart <b>M</b>anufacturing through <b>I</b>ntelligent <b>T</b>wins and <b>HY</b>brid Machining</span>.</p>
+      </article>
+      <article class="why-item">
+        <div class="why-pic"><svg class="wordmark wm-page" viewBox="0 0 300 130" aria-hidden="true"><g class="w-fill" font-family="Archivo, Arimo, Arial, sans-serif" font-weight="800" font-size="64" text-anchor="middle"><text x="20" y="76">S</text><text x="70" y="76">M</text><text x="174" y="76">T</text><text x="222" y="76">H</text></g><circle class="w-ring" cx="122" cy="52" r="17" fill="none" stroke-width="1.2" stroke-dasharray="2.4 2.4"/><g class="w-node" stroke-width="1.2"><circle cx="139" cy="52" r="2.2"/><circle cx="134" cy="64" r="2.2"/><circle cx="110" cy="64" r="2.2"/><circle cx="105" cy="52" r="2.2"/><circle cx="110" cy="40" r="2.2"/><circle cx="134" cy="40" r="2.2"/></g><path class="w-fill" transform="translate(100.4 30.4) scale(0.36)" d="M54.4 35.6 L56.1 29.2 L63.9 29.2 L65.6 35.6 L69.8 37.0 L74.9 32.8 L81.2 37.4 L78.9 43.6 L81.4 47.1 L88.0 46.8 L90.5 54.2 L84.9 57.8 L84.9 62.2 L90.5 65.8 L88.0 73.2 L81.4 72.9 L78.9 76.4 L81.2 82.6 L74.9 87.2 L69.8 83.0 L65.6 84.4 L63.9 90.8 L56.1 90.8 L54.4 84.4 L50.2 83.0 L45.1 87.2 L38.8 82.6 L41.1 76.4 L38.6 72.9 L32.0 73.2 L29.5 65.8 L35.1 62.2 L35.1 57.8 L29.5 54.2 L32.0 46.8 L38.6 47.1 L41.1 43.6 L38.8 37.4 L45.1 32.8 L50.2 37.0 Z"/><circle class="w-bg" cx="122" cy="52" r="3.6"/><path class="w-fill" d="M114 20 H130 L126 28 H118 Z"/><rect class="w-acc" x="120" y="28" width="4" height="53"/><path class="w-fill" transform="translate(101 61.2) scale(0.3)" d="M6 62 C 12 58, 20 56, 30 56 H58 C 64 56, 66 66, 70 66 C 74 66, 76 56, 82 56 H104 V68 L86 72 C 80 78, 80 84, 84 90 L96 96 H30 L40 90 C 44 84, 44 78, 40 72 L30 68 C 22 66, 14 64, 6 62 Z"/><line class="w-faint" x1="98" y1="92" x2="146" y2="92" stroke-width="0.8"/><path class="w-acc-s" transform="translate(101 122.8) scale(0.3 -0.3)" d="M6 62 C 12 58, 20 56, 30 56 H58 C 64 56, 66 66, 70 66 C 74 66, 76 56, 82 56 H104 V68 L86 72 C 80 78, 80 84, 84 90 L96 96 H30 L40 90 C 44 84, 44 78, 40 72 L30 68 C 22 66, 14 64, 6 62 Z" fill="none" stroke-width="3.6" stroke-dasharray="7 5" stroke-linejoin="round"/><line class="w-fill-s" x1="257" y1="31" x2="272" y2="55" stroke-width="9" stroke-linecap="round"/><line class="w-bg-s" x1="258.5" y1="33.5" x2="270.5" y2="52.5" stroke-width="9" stroke-dasharray="1.8 3.6"/><line class="w-acc-s" x1="292" y1="31" x2="277" y2="55" stroke-width="5" stroke-linecap="round"/><line class="w-fill-s" x1="274.5" y1="55" x2="274.5" y2="74" stroke-width="9" stroke-linecap="round"/><circle class="w-fill" cx="274.5" cy="55" r="5"/><circle class="w-acc" cx="274.5" cy="55" r="2.2"/></svg></div>
+        <h3>The wordmark</h3>
+        <p>The I is an abrasive waterjet passing through a gear inside a ring of sensor nodes and striking an anvil, with the anvil's digital twin drawn below. The Y joins an end mill and a waterjet into one tool: hybrid machining.</p>
+      </article>
+      <article class="why-item">
+        <div class="why-pic"><svg class="why-art" viewBox="0 0 120 120" aria-hidden="true"><g class="wa-line" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14 H112"/><path d="M20 14 V106"/><path d="M100 14 V106"/><path d="M20 14 L60 56 L100 14"/><path d="M60 14 V56"/><path d="M20 84 H100"/></g><path class="wa-acc-s" d="M60 56 V84" stroke-width="7" stroke-linecap="round"/><path class="wa-acc-s" d="M30 99 C 42 89, 50 89, 60 99 C 70 109, 78 109, 90 99" fill="none" stroke-width="4.5" stroke-linecap="round"/></svg></div>
+        <h3>The monogram</h3>
+        <p>Seen whole, it is a gantry machine tool: columns, beam, spindle, jet, bed and toolpath. Look closer and its strokes spell all six letters, S, M, I, T, H and Y.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section data-view="research" hidden>
+  <div class="page-head"><span class="label">Research</span><h2>From process physics to self-correcting machines</h2>
+    <p>We build hybrid computational frameworks that combine first-principles engineering, analytical modelling, computational physics and AI/ML. The goal is reliable digital twins of manufacturing processes and machines, and through them, predictive and autonomous manufacturing for aerospace, defence, automotive and biomedical industries.</p></div>
+  <div class="arc">
+    <div><span class="label">Process level</span><h3>Material removal</h3><p>Waterjet erosion, abrasive finishing, kerf and surface prediction.</p></div>
+    <div><span class="label">Machine level</span><h3>Machine behaviour</h3><p>Spindle thermal drift, dynamics, preload and damping.</p></div>
+    <div><span class="label">System level</span><h3>Digital twin</h3><p>CAM integration, IIoT, reduced-order models, machine vision.</p></div>
+  </div>
+  <div>
+    <div class="thread">
+      <div class="meta"><span class="label">Thread 1</span><h3>Abrasive waterjet milling</h3><span class="trl">Core strength</span></div>
+      <div class="body"><p>Controlled-depth milling of Ti-6Al-4V with abrasive waterjets. We couple CFD-simulated jet flow on non-planar targets with material removal models to predict kerf cross-sections in single and multipass, overlapped and shallow-angle milling, all the way from shallow to deep pockets.</p>
+        <ul><li>Kerf profile and material removal rate prediction</li><li>Jet flow dynamics on evolving, non-planar surfaces</li><li>PINNs and reduced-order models for kerf geometry</li><li>Micro-abrasive waterjet microchannels and submerged milling</li><li>In-situ machine-vision reconstruction of milled surfaces</li></ul></div>
+    </div>
+    <div class="thread">
+      <div class="meta"><span class="label">Thread 2</span><h3>Model-driven sequential machining</h3><span class="trl">Published 2025</span></div>
+      <div class="body"><p>Abrasive waterjet trepanning planned by a through-kerf prediction model, which treats the kerf profile as a generatrix to predict and correct hole radius, cylindricity and taper. The same idea extends to controlled freeform surfaces by ultra-high-pressure waterjets for bioimplants.</p></div>
+    </div>
+    <div class="thread">
+      <div class="meta"><span class="label">Thread 3</span><h3>Machine tool thermal compensation &amp; dynamics</h3><span class="trl">TRL 4</span></div>
+      <div class="body"><p>High-fidelity simulation combined with PINN-driven thermal reconstruction predicts tool-point error in air-cooled motorized spindles in real time from a few sensors. We also work on cyber-physical spindles with variable preload, high-speed spindle dynamics and passively damped boring bars.</p>
+        <ul><li>Heat generation in rolling bearings</li><li>Preload-aware thermal error models</li><li>Coupled force-temperature PINNs</li><li>Chatter suppression with passive damping</li></ul></div>
+    </div>
+    <div class="thread">
+      <div class="meta"><span class="label">Thread 4</span><h3>Hybrid machine tools</h3><span class="trl">New at IITH</span></div>
+      <div class="body"><p>A tabletop hybrid machining centre with a conventional milling spindle and abrasive waterjet or suspension-jet modules, with in-house CAM that plans toolpaths for both processes.</p></div>
+    </div>
+    <div class="thread">
+      <div class="meta"><span class="label">Thread 5</span><h3>Abrasive flow nanofinishing</h3><span class="trl">Foundation</span></div>
+      <div class="body"><p>Viscoelastic medium modelling and nano surface roughness simulation for abrasive flow finishing of macro-to-micro holes and microslots in surgical stainless steel (SS 316), and finishing of sculptured orthopaedic implants.</p></div>
+    </div>
+    <div class="thread">
+      <div class="meta"><span class="label">Thread 6</span><h3>PINNs for multiphysics manufacturing</h3><span class="trl">Methods</span></div>
+      <div class="body"><p>Physics-informed learning, surrogate and reduced-order models for thermo-mechanical and flow problems in manufacturing, including resistance spot welding, gas-solid multiphase flow and visco-elastic fluid flow, developed with the automotive industry.</p></div>
+    </div>
+  </div>
+  <div style="display:grid;gap:16px">
+    <div style="display:grid;gap:6px"><span class="label">How we work</span><h2>Capabilities</h2></div>
+    <div class="cards">
+      <div class="card"><span class="label">Characterization</span><h3>Surface and material measurement</h3>
+        <ul><li>Confocal microscopy (Olympus) with MountainsMap analysis of waterjet-milled pockets and kerfs</li><li>SEM examination of underwater abrasive waterjet milled features</li><li>Rheometry (Anton Paar) of viscoelastic abrasive media</li></ul></div>
+      <div class="card"><span class="label">Predictive &amp; control models</span><h3>From physics to prediction</h3>
+        <ul><li>Shallow-to-deep pocket geometry models for AWJ milling</li><li>Superfinishing models for macro-to-micro features in abrasive flow finishing</li><li>PINN thermal compensation and time-series models for thermal, flow and vibration data</li></ul></div>
+      <div class="card"><span class="label">Automation &amp; smart manufacturing</span><h3>Connected machines</h3>
+        <ul><li>IIoT-integrated machine tool systems</li><li>Cyber-physical spindles and digital twins in line with Industry 4.0</li></ul></div>
+      <div class="card"><span class="label">Software development</span><h3>In-house CAM</h3>
+        <ul><li>CAM software for advanced machining processes</li><li>Circular, spiral and zigzag toolpath generation for waterjet milling</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- PEOPLE -->
+<section data-view="people" hidden>
+  <div class="pi-card">
+    <aside class="pi-side">
+      <div class="portrait" aria-hidden="true">TND</div>
+      <div class="pi-id">
+        <h2 class="pi-name">T N Deepu Kumar</h2>
+        <span>PhD, Indian Institute of Technology Madras</span>
+        <em class="pi-role">Assistant Professor</em>
+        <span>Dept. of Mechanical &amp; Aerospace Engineering<br>IIT Hyderabad, India</span>
+        <ul class="pi-links">
+          <li><a href="#contact">Email</a></li>
+          <li><a href="https://scholar.google.com/citations?user=Rx4ChJkAAAAJ" target="_blank" rel="noopener">Google Scholar</a></li>
+          <li><a href="https://www.researchgate.net/profile/Deepu-Kumar-3" target="_blank" rel="noopener">ResearchGate</a></li>
+          <li><a href="https://www.linkedin.com/in/t-n-deepu-kumar-973004217/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://orcid.org/0000-0001-6112-067X" target="_blank" rel="noopener">ORCID</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="pi-main">
+      <p>I am an Assistant Professor in the Department of Mechanical and Aerospace Engineering, IIT Hyderabad. Prior to joining IITH, I worked as a Senior Engineer at TCS-General Motors, and earlier as a Postdoctoral Fellow at IITM Pravartak Technologies Foundation, IIT Madras Research Park.</p>
+      <p>In our research, we combine first-principles and physics-informed AI modelling with digital twins, cyber-physical systems and IIoT to monitor and control conventional and unconventional machining processes and machine tools, with applications in aerospace, defence, automotive and biomedical manufacturing. Please refer to the <a href="#research">Research</a> page for a detailed overview of our group's ongoing projects.</p>
+
+      <h3>Experience</h3>
+      <ul class="pi-list">
+        <li><b>Assistant Professor:</b> Indian Institute of Technology Hyderabad, Telangana, India (Oct 2026 - present)</li>
+        <li><b>Senior Engineer:</b> <i>TCS-General Motors</i>, Bengaluru, India (Jan 2026 - Oct 2026)</li>
+        <li><b>Assistant Professor:</b> <i>Dayananda Sagar University</i>, Bengaluru, India (Jul 2025 - Jan 2026)</li>
+        <li><b>Postdoctoral Fellow:</b> <i>IITM Pravartak Technologies Foundation</i>, IIT Madras Research Park, Chennai (Dec 2024 - Jun 2025)</li>
+        <li><b>Senior Project Associate:</b> <i>IITM Pravartak Technologies Foundation</i>, Chennai (Jan 2024 - Dec 2024)</li>
+      </ul>
+
+      <h3>Education</h3>
+      <ul class="pi-list">
+        <li><b>PhD:</b> Mechanical Engineering, <i>Indian Institute of Technology Madras</i> (2019 - 2024)</li>
+        <li><b>M.Tech:</b> Computational Mechanics, <i>Indian Institute of Technology Guwahati</i> (2014 - 2016)</li>
+        <li><b>B.Tech:</b> Mechanical Engineering, <i>Sri Venkateswara University</i>, Tirupati (2009 - 2013)</li>
+      </ul>
+
+      <h3>Professional services</h3>
+      <ul class="pi-list">
+        <li><b>Reviewer Editor:</b> Springer journals (2025 - present)</li>
+        <li><b>Reviewer:</b> Journal of Manufacturing Processes (Elsevier), CIRP Journal of Manufacturing Science and Technology (Elsevier), Journal of Mechanical Sciences</li>
+      </ul>
+
+      <h3>Awards</h3>
+      <ul class="pi-list">
+        <li><b>Best Oral Presentation:</b> 13th Pacific Rim International Conference on Water Jet Technology, NTU Singapore (2022)</li>
+      </ul>
+
+      <p class="note">The lab is recruiting PhD and M.Tech students. See <a href="#opportunities">Opportunities</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section data-view="publications" hidden>
+  <div class="page-head"><span class="label">Publications</span><h2>Papers and book chapters</h2>
+    <p>The full, up-to-date list is on <a href="https://scholar.google.com/citations?user=Rx4ChJkAAAAJ" target="_blank" rel="noopener">Google Scholar</a>, <a href="https://orcid.org/0000-0001-6112-067X" target="_blank" rel="noopener">ORCID</a>, <a href="https://www.researchgate.net/profile/Deepu-Kumar-3" target="_blank" rel="noopener">ResearchGate</a> and <a href="https://www.linkedin.com/in/t-n-deepu-kumar-973004217/" target="_blank" rel="noopener">LinkedIn</a>.</p>
+    <div class="pubnav"><a href="#publications" data-jump="pj">Journal papers</a><a href="#publications" data-jump="pc">Conferences</a><a href="#publications" data-jump="pbk">Edited book</a><a href="#publications" data-jump="pb">Book chapters</a></div>
+  </div>
+
+  <div class="pubgroup" id="pj">
+    <h3>Peer-reviewed journals <small>13</small></h3>
+    <p class="if-note">IF: Journal Impact Factor (Clarivate Journal Citation Reports); Q: JCR quartile.</p>
+    <ol class="entries">
+      <li><span>Prasad, A., <span class="me">Deepu Kumar, T.N.</span>, Gunjan, S.B., Srinivasu, D.S. A high-fidelity simulation with PINN-driven thermal reconstruction framework for real-time tool error prediction in air-cooled motorized spindles. <span class="venue">Measurement Science and Technology</span>, 37, 2026. <a href="https://doi.org/10.1088/1361-6501/ae4bfa" target="_blank" rel="noopener">DOI</a> <span class="status">IF 3.7 · Q1</span></span></li>
+      <li><span>Ravi, R.R., <span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. An approach to predict the abrasive waterjet trepanned hole geometry by considering the through-kerf profile as a generatrix. <span class="venue">Measurement</span>, 256A, 118146, 2025. <a href="https://doi.org/10.1016/j.measurement.2025.118146" target="_blank" rel="noopener">DOI</a> <span class="status">IF 6.1 · Q1</span></span></li>
+      <li><span>Ravi, R.R., <span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Enhancing abrasive waterjet trepanned hole geometry using a through-kerf prediction model informed sequential machining. <span class="venue">CIRP J. Manuf. Sci. Technol.</span>, 60, 138-152, 2025. <a href="https://doi.org/10.1016/j.cirpj.2025.04.013" target="_blank" rel="noopener">DOI</a> <span class="status">IF 5.6 · Q1</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Shallow-angled jet impingement generated channel geometry prediction in milling Ti-6Al-4V alloy. <span class="venue">J. Manuf. Processes</span>, 134, 410-434, 2024. <a href="https://doi.org/10.1016/j.jmapro.2024.12.047" target="_blank" rel="noopener">DOI</a> <span class="status">IF 7.8 · Q1</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Modelling framework to predict shallow-to-deep geometries of milled pockets by incorporating the effect of waterjet flow on nonplanar target. <span class="venue">Int. J. Adv. Manuf. Technol.</span>, 134, 4315-4338, 2024. <a href="https://doi.org/10.1007/s00170-024-14364-3" target="_blank" rel="noopener">DOI</a> <span class="status">IF 3.9 · Q1</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. A generic model for prediction of kerf cross-sectional profile in multipass abrasive waterjet milling at macroscopic scale by considering the jet flow dynamics. <span class="venue">Int. J. Adv. Manuf. Technol.</span>, 127, 2815-2841, 2023. <a href="https://doi.org/10.1007/s00170-023-11683-9" target="_blank" rel="noopener">DOI</a> <span class="status">IF 3.9 · Q1</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Integration of CFD simulated abrasive waterjet flow dynamics with the material removal model for kerf geometry prediction in overlapped erosion on Ti-6Al-4V alloy. <span class="venue">Simul. Model. Pract. Theory</span>, 127, 102788, 2023. <a href="https://doi.org/10.1016/j.simpat.2023.102788" target="_blank" rel="noopener">DOI</a> <span class="status">IF 4.6 · Q1</span></span></li>
+      <li><span>Ravi, R.R., <span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Experimental investigation and modeling of the kerf profile in submerged milling by macro abrasive waterjet. <span class="venue">ASME J. Manuf. Sci. Eng.</span>, 145(9), 091004, 2023. <a href="https://doi.org/10.1115/1.4062547" target="_blank" rel="noopener">DOI</a> <span class="status">IF 3.5 · Q1</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Understanding and predicting material removal rate in abrasive waterjet milling of kerfs. <span class="venue">Manufacturing Technology Today</span>, 22(5), 36-43, 2023. <a href="https://doi.org/10.58368/MTT.22.5.2023.36-43" target="_blank" rel="noopener">DOI</a></span></li>
+      <li><span>Maheedhara Reddy, G., Diwakar Reddy, V., <span class="me">Deepu Kumar, T.N.</span> Experimental and theoretical investigations of heat generation in radial ball bearing. <span class="venue">Int. J. Ambient Energy</span>, 42(12), 1420-1427, 2021. <a href="https://doi.org/10.1080/01430750.2019.1611635" target="_blank" rel="noopener">DOI</a> <span class="status">CiteScore 5.9 · Q1</span></span></li>
+      <li><span>Singh, S., <span class="me">Deepu Kumar, T.N.</span>, Ravi Sankar, M., Jain, V.K. Viscoelastic medium modeling and surface roughness simulation of microholes finished by abrasive flow finishing process. <span class="venue">Int. J. Adv. Manuf. Technol.</span>, 100, 1165-1182, 2019. <a href="https://doi.org/10.1007/s00170-018-1912-2" target="_blank" rel="noopener">DOI</a> <span class="status">IF 3.9 · Q1</span></span></li>
+      <li><span>Singh, S., <span class="me">Deepu Kumar, T.N.</span>, Ravi Sankar, M., Rajurkar, K. Nanofinishing of microslots on surgical stainless steel by abrasive flow finishing process: experimentation and modeling. <span class="venue">ASME J. Micro Nano-Manuf.</span>, 6(2), 021005, 2018. <a href="https://doi.org/10.1115/1.4039295" target="_blank" rel="noopener">DOI</a> <span class="status">IF 1.3 · Q2</span></span></li>
+      <li><span>Singh, S., <span class="me">Deepu Kumar, T.N.</span>, Ravi Sankar, M. Experimental, theoretical, and simulation comparative study of nano surface roughness generated during abrasive flow finishing process. <span class="venue">ASME J. Manuf. Sci. Eng.</span>, 139(6), 061014, 2017. <a href="https://doi.org/10.1115/1.4035417" target="_blank" rel="noopener">DOI</a> <span class="status">IF 3.5 · Q1</span></span></li>
+    </ol>
+  </div>
+
+  <div class="pubgroup" id="pc">
+    <h3>Conference proceedings <small>5</small></h3>
+    <ol class="entries">
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Modelling of microchannel cross-sectional profile generated on Ti-6Al-4V alloy by micro-abrasive waterjet. <span class="venue">AIMTDR 2023</span>, IIT BHU, Varanasi, December 2023.</span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Understanding and predicting material removal rate in abrasive waterjet milling of kerfs. <span class="venue">COPEN 2022</span>, IIT Kanpur, December 2022.</span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. A hybrid model for prediction of 2D kerf geometry milled by abrasive waterjets in a single pass erosion on Ti-6Al-4V alloy. <span class="venue">13th Pacific Rim International Conference on Water Jet Technology (WJTSJ)</span>, NTU Singapore, November 2022. <span class="status">Best Oral Presentation</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Singh, S., Ravi Sankar, M. Effect of abrasive particle bluntness on nano finishing using abrasive flow finishing (AFF) process. <span class="venue">Int. Conf. on Nanotechnology for Better Living</span>, 3(1), 19, NIT Srinagar, May 2016.</span></li>
+      <li><span>Ravi Sankar, M., Singh, S., <span class="me">Deepu Kumar, T.N.</span>, Sekar, D., Basu, B. Finishing of complex sculptured orthopedic bio-implants using polymer rheological abrasive semisolid medium. <span class="venue">IITG-KIT Joint Symposium on Soft and Biobased Materials</span>, Kyoto Institute of Technology, Japan, August 2016.</span></li>
+    </ol>
+  </div>
+
+  <div class="pubgroup" id="pbk">
+    <h3>Edited book <small>1</small></h3>
+    <ol class="entries">
+      <li><span><span class="me">Deepu Kumar, T.N.</span> and Gajrani, K.K. (eds.) <span class="venue">Smart Manufacturing using Cyber-physical Systems and Digital Twins</span>. CRC Press, Taylor &amp; Francis. <span class="status">under preparation</span></span></li>
+    </ol>
+  </div>
+
+  <div class="pubgroup" id="pb">
+    <h3>Book chapters <small>5</small></h3>
+    <ol class="entries">
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Ravi, R.R. AI/ML-driven predictive modelling and decision making in waterjet machining of advanced materials: towards smart control and digital twin development. In <span class="venue">Data-Driven Decision Making in Advanced Manufacturing</span> (eds. A. P. Madathil, K. K. Gajrani, K. K. Saxena), ASME Press.</span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Precision machining of advanced materials with micro-waterjet technology for manufacturing next-generation products. In <span class="venue">Next-Gen Technologies for Precision Machining of Advanced Materials</span> (eds. S. K. Tamang, J. Immanuel, G. Thangamani), CRC Press. <span class="status">in press</span></span></li>
+      <li><span><span class="me">Deepu Kumar, T.N.</span>, Srinivasu, D.S. Enablers for realizing controlled freeform surfaces by ultra-high pressure waterjets for bioimplant manufacturing. In <span class="venue">Bioimplants Manufacturing: Fundamentals and Advances</span> (eds. A. P. Madathil, K. K. Gajrani, X. Luo), CRC Press.</span></li>
+      <li><span>Chinmoyee, D., <span class="me">Deepu Kumar, T.N.</span>, Ravi, R.R., Srinivasu, D.S. High-energy beam-based surface texturing on advanced engineering materials used in bioimplants. In <span class="venue">Nanomanufacturing Techniques in Sustainable Healthcare Applications</span> (eds. A. Prasad, P. Kumar), CRC Press.</span></li>
+      <li><span>Singh, S., <span class="me">Deepu Kumar, T.N.</span>, Ravi Sankar, M., Jain, V.K. Magnetic abrasive finishing process and modeling. In <span class="venue">Nanofinishing Science and Technology</span> (ed. V. K. Jain), CRC Press.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATENTS -->
+<section data-view="patents" hidden>
+  <div class="page-head"><span class="label">Patents</span><h2>Patents and software</h2></div>
+  <div class="slot" style="padding:32px"><h3>Updates coming soon</h3><span>Patent filings and software releases from the lab will be listed here.</span></div>
+</section>
+
+<!-- TALKS -->
+<section data-view="talks" hidden>
+  <div class="page-head"><span class="label">Talks</span><h2>Talks</h2>
+    <div class="legend" aria-label="Legend"><span class="tag-inv">Invited</span><span class="tag-pre">Presented</span><span class="tag-par">Participated</span><span class="tag-award">Award</span></div>
+  </div>
+  <div style="display:grid;gap:12px">
+    <h3>Talks/Presentations</h3>
+    <ul class="news talks">
+      <li><time datetime="2026-10-13">13 Oct 2026</time><span class="entry"><span class="tags"><span class="tag-inv">Invited</span></span><span><b>Physics-Informed AI and Digital Twins for Advanced Manufacturing: An Industry Perspective.</b> Industry Lectures course for M.Tech students in Additive Manufacturing, Centre for Interdisciplinary Programs, IIT Hyderabad</span></span></li>
+      <li><time datetime="2023-12">Dec 2023</time><span class="entry"><span class="tags"><span class="tag-pre">Presented</span></span><span>Modelling of microchannel cross-sectional profile generated on Ti-6Al-4V alloy by micro-abrasive waterjet. AIMTDR 2023, IIT BHU, Varanasi</span></span></li>
+      <li><time datetime="2022-12">Dec 2022</time><span class="entry"><span class="tags"><span class="tag-pre">Presented</span></span><span>Understanding and predicting material removal rate in abrasive waterjet milling of kerfs. COPEN 2022, IIT Kanpur</span></span></li>
+      <li><time datetime="2022-11">Nov 2022</time><span class="entry"><span class="tags"><span class="tag-pre">Presented</span><span class="tag-award">Best Oral Presentation</span></span><span>A hybrid model for prediction of 2D kerf geometry milled by abrasive waterjets in single-pass erosion on Ti-6Al-4V alloy. 13th Pacific Rim International Conference on Water Jet Technology, NTU Singapore</span></span></li>
+      <li><time datetime="2016-08">Aug 2016</time><span class="entry"><span class="tags"><span class="tag-par">Co-author</span></span><span>Finishing of complex sculptured orthopaedic bio-implants using polymer rheological abrasive semisolid medium. IITG-KIT Joint Symposium on Soft and Biobased Materials, Kyoto Institute of Technology, Japan</span></span></li>
+      <li><time datetime="2016-05">May 2016</time><span class="entry"><span class="tags"><span class="tag-pre">Presented</span></span><span>Effect of abrasive particle bluntness on nano finishing using abrasive flow finishing. International Conference on Nanotechnology for Better Living, NIT Srinagar</span></span></li>
+    </ul>
+  </div>
+  <div style="display:grid;gap:12px">
+    <h3>Workshops and training programs</h3>
+    <ul class="news talks">
+      <li><time datetime="2024-03">Mar 2024</time><span class="entry"><span class="tags"><span class="tag-par">Participated</span></span><span>Integration of Cyber-Physical Systems for Industry 4.0, 5-day national workshop, Department of Mechanical Engineering, IIT Guwahati (30 Mar - 3 Apr 2024)</span></span></li>
+      <li><time datetime="2023-10">Oct 2023</time><span class="entry"><span class="tags"><span class="tag-par">Participated</span></span><span>Introduction to CFD using OpenFOAM, 1-day international workshop, NPTEL with the University of Birmingham (7 Oct 2023)</span></span></li>
+      <li><time datetime="2023-06">Jun 2023</time><span class="entry"><span class="tags"><span class="tag-par">Participated</span></span><span>ANSYS Multiphysics Event, 5-day workshop, Department of Mechanical Engineering, NIT Puducherry, Karaikal (12-16 Jun 2023)</span></span></li>
+      <li><time datetime="2013-03">Mar 2013</time><span class="entry"><span class="tags"><span class="tag-par">Participated</span></span><span>Advances in Mechanical Engineering, 2-day national workshop, Department of Mechanical Engineering, Sri Venkateswara University (25-26 Mar 2013)</span></span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- OPPORTUNITIES -->
+<section data-view="opportunities" hidden>
+  <div class="page-head"><span class="label">Opportunities</span><h2>Join the lab</h2>
+    <p>We look for people who enjoy both the mathematics and the machine shop. You will write models, run experiments on real machines, and build hardware.</p></div>
+  <div class="cards">
+    <div class="card"><span class="label">PhD</span><h3>Doctoral students</h3><p>Apply through the IITH MAE PhD admissions cycle and mention SMITHY Lab in your statement of purpose.</p>
+      <ul><li>Background in mechanical, production or manufacturing engineering</li><li>Comfort with Python or MATLAB and numerical methods</li></ul></div>
+    <div class="card"><span class="label">M.Tech</span><h3>Master's projects</h3><p>Thesis topics in waterjet modelling, spindle thermal behaviour, CAM software and hybrid machine design.</p></div>
+    <div class="card"><span class="label">Interns &amp; JRF</span><h3>Short-term positions</h3><p>Email a CV, a one-page note on the problem you want to work on, and one sample of code or a report.</p></div>
+  </div>
+  <div class="card skills">
+    <h3>Skills that help</h3>
+    <p>None of these are prerequisites. They show what you will use and build on in the lab at each level.</p>
+    <div class="skill-levels">
+      <div class="skill-level">
+        <span class="label">UG projects &amp; interns</span>
+        <div class="chips"><span class="chip">machining fundamentals</span><span class="chip">manufacturing processes</span><span class="chip">engineering drawing</span><span class="chip">SOLIDWORKS / CATIA</span><span class="chip">Python or MATLAB basics</span><span class="chip">Arduino / sensors</span><span class="chip">lab measurement</span></div>
+      </div>
+      <div class="skill-level">
+        <span class="label">M.Tech</span>
+        <div class="chips"><span class="chip">metal cutting &amp; machine tools</span><span class="chip">non-traditional machining</span><span class="chip">CNC / G-code &amp; CAM</span><span class="chip">numerical methods</span><span class="chip">FEM / CFD (ANSYS)</span><span class="chip">Python / MATLAB</span><span class="chip">DAQ &amp; signal processing</span><span class="chip">design of experiments</span><span class="chip">surface metrology</span></div>
+      </div>
+      <div class="skill-level">
+        <span class="label">PhD</span>
+        <div class="chips"><span class="chip">process modelling</span><span class="chip">PDEs &amp; numerical methods</span><span class="chip">PINNs / PyTorch</span><span class="chip">machine learning</span><span class="chip">digital twins</span><span class="chip">IIoT &amp; cyber-physical systems</span><span class="chip">control systems</span><span class="chip">uncertainty quantification</span><span class="chip">scientific writing</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHING -->
+<section data-view="teaching" hidden>
+  <div class="page-head"><span class="label">Teaching</span><h2>Courses at IIT Hyderabad</h2></div>
+  <article class="card" style="gap:16px">
+    <div style="display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;justify-content:space-between">
+      <div style="display:grid;gap:4px"><span class="label">UG elective · 3 credits · B.Tech III / IV</span><h3 style="font-size:1.4rem">Industrial Automation</h3></div>
+      <span class="status" style="font-size:.85rem">Jan 2027 semester</span>
+    </div>
+    <p>Principles, systems and technologies of automation, so that students can design, analyse and implement automated manufacturing systems. Prepares students for industry needs in manufacturing, automation and robotics.</p>
+    <div class="twocol">
+      <div style="display:grid;gap:8px;min-width:0"><span class="label">Topics</span>
+        <ul style="margin:0;padding-left:1.1em;color:var(--muted);display:grid;gap:4px;font-size:.95rem">
+          <li>Types of automation: fixed, programmable and flexible</li>
+          <li>Automated flow lines, workpart transport and transfer mechanisms</li>
+          <li>Automated assembly: feeders, part orienting devices, design for automated assembly</li>
+          <li>Sensors for automated manufacturing systems</li>
+          <li>Drives and mechanisms: ball screws, linear bearings, cams; hydraulic, pneumatic and robotic transfer</li>
+          <li>Industry 4.0 and digital twins</li>
+        </ul></div>
+      <div style="display:grid;gap:8px;min-width:0"><span class="label">References</span>
+        <ul style="margin:0;padding-left:1.1em;color:var(--muted);display:grid;gap:4px;font-size:.95rem">
+          <li>M. P. Groover, <i>Automation, Production Systems, and Computer-Integrated Manufacturing</i>, Prentice Hall</li>
+          <li>R. Asfahl, <i>Robots and Manufacturing Automation</i>, Wiley India</li>
+          <li>G. Boothroyd, <i>Assembly Automation and Product Design</i>, Taylor &amp; Francis</li>
+        </ul></div>
+    </div>
+  </article>
+</section>
+
+<!-- CONTACT -->
+<section data-view="contact" hidden>
+  <div class="page-head"><span class="label">Contact</span><h2>Get in touch</h2></div>
+  <div class="contact">
+    <div class="card">
+      <span class="label">Office</span>
+      <address class="addr">T N Deepu Kumar<br>Room C-421, Academic Block C<br>Department of Mechanical &amp; Aerospace Engineering<br>Indian Institute of Technology Hyderabad<br>Kandi, Sangareddy, Telangana 502284, India</address>
+    </div>
+    <div class="card">
+      <span class="label">Email</span>
+      <div class="copy"><code id="email">tndeepu@mae.iith.ac.in</code><button type="button" id="copy-btn">Copy</button></div>
+      <p>Prospective students: put "SMITHY Lab application" in the subject line.</p>
+      <span class="label" style="margin-top:8px">Profiles</span>
+      <div class="links">
+        <a href="https://scholar.google.com/citations?user=Rx4ChJkAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0000-0001-6112-067X" target="_blank" rel="noopener">ORCID</a>
+        <a href="https://www.researchgate.net/profile/Deepu-Kumar-3" target="_blank" rel="noopener">ResearchGate</a>
+        <a href="https://www.linkedin.com/in/t-n-deepu-kumar-973004217/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap"><span>&copy; SMITHY Lab IITH 2026, all rights reserved.</span><span>Department of Mechanical &amp; Aerospace Engineering</span></div></footer>
+
+<script>
+(function(){
+  const views=[...document.querySelectorAll('[data-view]')], links=[...document.querySelectorAll('nav a')];
+  const nav=document.getElementById('nav'), btn=document.getElementById('menu-btn');
+  function route(){
+    const id=(location.hash||'#home').slice(1);
+    const name=views.some(v=>v.dataset.view===id)?id:'home';
+    views.forEach(v=>v.hidden=v.dataset.view!==name);
+    links.forEach(a=>{ if(a.getAttribute('href')==='#'+name) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+    nav.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+    window.scrollTo(0,0);
+  }
+  addEventListener('hashchange',route); route();
+  btn.addEventListener('click',()=>{const o=nav.classList.toggle('open');btn.setAttribute('aria-expanded',o)});
+
+  document.getElementById('copy-btn').addEventListener('click',e=>{
+    const t=document.getElementById('email').textContent;
+    navigator.clipboard?.writeText(t).then(()=>{e.target.textContent='Copied'},()=>{
+      const r=document.createRange();r.selectNodeContents(document.getElementById('email'));getSelection().removeAllRanges();getSelection().addRange(r);
+    });
+  });
+
+  document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();document.getElementById(a.dataset.jump).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}));
+
+})();
+</script>
+<script>
+(function(){
+const cv=document.getElementById('loopcv'); if(!cv) return;
+const ctx=cv.getContext('2d');
+let INK,MUTED,LINE,ORANGE,TEAL,SURF,TOOLC,DEF;
+function colors(){const c=getComputedStyle(document.documentElement);INK=c.getPropertyValue('--ink').trim();MUTED=c.getPropertyValue('--muted').trim();LINE=c.getPropertyValue('--line').trim();ORANGE=c.getPropertyValue('--accent').trim();TEAL=c.getPropertyValue('--teal').trim();SURF=c.getPropertyValue('--surface').trim();TOOLC=c.getPropertyValue('--tool').trim()||'#2f6db5';DEF=c.getPropertyValue('--defect').trim()||'#b4235a';}
+colors();try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',colors)}catch(e){}
+let reduce=false;try{reduce=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+let W=0,H=0,running=false;
+function size(){const d=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;if(!W)return;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+try{new ResizeObserver(()=>{size();if(!running)draw();}).observe(cv)}catch(e){addEventListener('resize',()=>{size();if(!running)draw();})}
+let t=19.5,err=1,lastCycle=-1;const CYC=45;
+const B=[[30,99],[42,89],[50,89],[60,99],[70,109],[78,109],[90,99]];
+function bz(p0,p1,p2,p3,u){const v=1-u;return[v*v*v*p0[0]+3*v*v*u*p1[0]+3*v*u*u*p2[0]+u*u*u*p3[0],v*v*v*p0[1]+3*v*v*u*p1[1]+3*v*u*u*p2[1]+u*u*u*p3[1]];}
+function S(s){return s<0.5?bz(B[0],B[1],B[2],B[3],s*2):bz(B[3],B[4],B[5],B[6],(s-0.5)*2);}
+function bend(s){return Math.exp(-Math.pow((s-0.25)/0.09,2))+Math.exp(-Math.pow((s-0.75)/0.09,2));}
+const NS=90;
+function monogram(ox,oy,k,wire,s,tool,ext,errAt,showTarget,trailTo){
+  const P=(x,y)=>[ox+x*k,oy+y*k];
+  const line=(pts,col,lw,dash)=>{ctx.beginPath();pts.forEach((p,i)=>{const q=P(p[0],p[1]);i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);});ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.setLineDash(dash||[]);ctx.stroke();ctx.setLineDash([]);};
+  ctx.lineCap='round';ctx.lineJoin='round';
+  const col=wire?MUTED:INK,lw=wire?2:Math.max(3,2.6*k),dash=wire?[6,5]:null;
+  const tp=S(s),jx=tp[0];
+  line([[8,14],[112,14]],col,lw,dash);line([[20,14],[20,106]],col,lw,dash);line([[100,14],[100,106]],col,lw,dash);
+  line([[20,14],[jx,56],[100,14]],col,lw,dash);line([[jx,14],[jx,56]],col,lw,dash);
+  line([[20,84],[100,84]],col,lw,dash);
+  /* workpiece (plan view) */
+  const a=P(24,87),b=P(96,112);ctx.fillStyle=MUTED;ctx.globalAlpha=wire?0.06:0.1;ctx.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);ctx.globalAlpha=1;
+  /* depth trail */
+  const base=wire?2.6:Math.max(2,1.2*k);
+  for(let i=0;i<NS;i++){const s0=i/NS,s1=(i+1)/NS;if(s0>=trailTo)break;const e=errAt(s0),ex=e*bend(s0);const p0=S(s0),p1=S(Math.min(s1,trailTo));
+    line([p0,p1],wire?MUTED:INK,base,null);
+    if(ex>0.03){ctx.globalAlpha=Math.min(1,0.35+ex);line([p0,p1],DEF,base*(1+4*ex),null);ctx.globalAlpha=1;}}
+  if(showTarget){const hw=(base*0.5+2.2)/k;[-1,1].forEach(sg=>{const pts=[];for(let i=0;i<=NS;i++){const u=i/NS,a=S(Math.max(0,u-0.004)),b=S(Math.min(1,u+0.004)),dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1,p=S(u);pts.push([p[0]-sg*dy/L*hw,p[1]+sg*dx/L*hw]);}line(pts,INK,1.2,[4,3]);});}
+  [0.25,0.75].forEach(sb=>{if(trailTo<sb)return;const ex=errAt(sb);if(ex<0.12)return;const p=S(sb),q=P(p[0],p[1]);ctx.strokeStyle=DEF;ctx.globalAlpha=Math.min(0.9,0.3+ex*0.6);ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.arc(q[0],q[1],(5+7*ex)*k*0.9,0,7);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+    if(showTarget){ctx.font='bold 11px Arial, sans-serif';ctx.fillStyle=DEF;const off=(7+7*ex)*k*0.9;ctx.textAlign=sb<0.5?'right':'left';ctx.fillText('overcut',sb<0.5?q[0]-off:q[0]+off,q[1]+4);}});
+  /* tool in front view */
+  const ty=56+(84-56)*ext;
+  if(ext>0.02){
+    if(tool==='jet'){line([[jx,56],[jx,ty]],ORANGE,wire?2:lw*0.7,wire?[4,4]:null);}
+    else{
+      const len=ty-56,sh=56+len*0.42,hw=wire?2.6:3.1,hs=wire?2.2:2.4;
+      const X=(x)=>ox+x*k,Y=(y)=>oy+y*k;
+      if(wire){
+        ctx.setLineDash([4,3]);ctx.strokeStyle=MUTED;ctx.lineWidth=1.4;
+        ctx.strokeRect(X(jx-hs),Y(56),hs*2*k,(sh-56)*k);
+        ctx.strokeStyle=TOOLC;ctx.strokeRect(X(jx-hw),Y(sh),hw*2*k,(ty-sh)*k);ctx.setLineDash([]);
+      }else{
+        ctx.fillStyle=INK;ctx.fillRect(X(jx-hs),Y(56),hs*2*k,(sh-56)*k);
+        ctx.fillStyle=TOOLC;ctx.fillRect(X(jx-hw),Y(sh),hw*2*k,(ty-sh)*k);
+        ctx.save();ctx.beginPath();ctx.rect(X(jx-hw),Y(sh),hw*2*k,(ty-sh)*k);ctx.clip();
+        ctx.strokeStyle=SURF;ctx.globalAlpha=0.75;ctx.lineWidth=Math.max(1,0.7*k);ctx.lineCap='butt';
+        const ph=(t*9)%3.2;
+        for(let y=sh-6+ph;y<ty+6;y+=3.2){ctx.beginPath();ctx.moveTo(X(jx-hw),Y(y));ctx.lineTo(X(jx+hw),Y(y-3));ctx.stroke();}
+        ctx.restore();ctx.globalAlpha=1;ctx.lineCap='round';
+        ctx.fillStyle=INK;ctx.fillRect(X(jx-hw),Y(ty)-Math.max(1.5,0.6*k),hw*2*k,Math.max(1.5,0.6*k));
+      }
+    }
+  }
+  /* link front view to plan view */
+  line([[jx,85],tp],LINE,1,[2,3]);
+  const q=P(tp[0],tp[1]);ctx.fillStyle=(tool==='jet'&&ext>0.9)?ORANGE:(wire?MUTED:INK);ctx.beginPath();ctx.arc(q[0],q[1],wire?3:Math.max(3,1.6*k),0,7);ctx.fill();
+  const c=P(jx,56);ctx.fillStyle=ORANGE;ctx.beginPath();ctx.arc(c[0],c[1],wire?3.5:Math.max(4,2.3*k),0,7);ctx.fill();
+  return {a:P(112,0)[0],b:P(8,0)[0]};
+}
+function draw(){
+  if(!W||!cv.offsetParent) return;
+  ctx.clearRect(0,0,W,H);
+  const cyc=(t%CYC)/CYC,cycle=Math.floor(t/CYC);
+  if(cycle!==lastCycle){lastCycle=cycle;if(cycle>0)err=err*0.5;if(err<0.07)err=1;}
+  const next=err*0.5,cl=(x,a,b)=>Math.min(1,Math.max(0,(x-a)/(b-a)));
+  let s,tool='jet',ext=1,errAt=()=>err,trail=1,phase,label;
+  if(cyc<0.35){phase=0;s=cl(cyc,0,0.35);trail=s;label='Cut: waterjet bulk removal along the S';}
+  else if(cyc<0.47){phase=1;s=1;label='Sense: measuring depth along the path';}
+  else if(cyc<0.6){phase=2;s=1-cl(cyc,0.47,0.6);label='Update twin: predicting overcut at the bends';}
+  else if(cyc<0.7){phase=3;s=0;const u=cl(cyc,0.6,0.7);if(u<0.5){tool='jet';ext=1-u*2;}else{tool='mill';ext=(u-0.5)*2;}label='Tool change: waterjet \u2192 end mill';}
+  else if(cyc<0.92){phase=3;tool='mill';s=cl(cyc,0.7,0.92);errAt=(u)=>u<s?next:err;label='Correct: end mill finishing to precise geometry';}
+  else{phase=3;errAt=()=>next;const u=cl(cyc,0.92,1);if(u<0.4){tool='mill';ext=1-u/0.4;s=1;}else{tool='jet';const v=(u-0.4)/0.6;s=1-v;ext=v;}label='Tool change: end mill \u2192 waterjet';}
+  document.querySelectorAll('.ls').forEach(e=>e.classList.toggle('on',+e.dataset.i===phase));
+  document.querySelectorAll('.lg [data-tool]').forEach(e=>e.classList.toggle('active',e.dataset.tool===tool&&ext>0.5));
+  const TOP=34,k=Math.min((W*0.36)/120,(H-TOP-14)/120),sz=120*k,oy=TOP+(H-TOP-sz)/2;
+  ctx.font='600 14px Arial, sans-serif';ctx.textAlign='center';
+  ctx.fillStyle=INK;ctx.fillText('Physical machine',W*0.03+sz/2,22);
+  ctx.fillStyle=MUTED;ctx.fillText('Digital twin',W*0.97-sz/2,22);
+  const L=monogram(W*0.03,oy,k,false,s,tool,ext,errAt,false,trail);
+  const R=monogram(W*0.97-sz,oy,k,true,s,tool,ext,errAt,true,1);
+  const a=L.a+14,b=R.b-14,y1=H*0.36,y2=H*0.56;
+  if(b-a>40){
+    ctx.strokeStyle=LINE;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a,y1);ctx.lineTo(b,y1);ctx.moveTo(a,y2);ctx.lineTo(b,y2);ctx.stroke();
+    ctx.font='12px Arial, sans-serif';ctx.fillStyle=MUTED;ctx.textAlign='center';
+    ctx.fillText('sensor data',(a+b)/2,y1-8);ctx.fillText('correction',(a+b)/2,y2+18);
+    if(phase===1||phase===2){for(let i=0;i<4;i++){const u=((cyc-0.35)*9+i*0.25)%1;ctx.fillStyle=TEAL;ctx.beginPath();ctx.arc(a+(b-a)*u,y1,4,0,7);ctx.fill();}}
+    if(phase===3&&cyc<0.7){for(let i=0;i<3;i++){const u=((cyc-0.6)*13.5+i*0.33)%1;ctx.fillStyle=TOOLC;ctx.beginPath();ctx.arc(b-(b-a)*u,y2,4,0,7);ctx.fill();}}
+  }
+  const shown=Math.round((cyc>=0.92?next:err)*100);
+  document.getElementById('looperr').textContent=label+' \u00b7 Overcut at bends: '+shown+'%';
+}
+function loop(){t+=1/60;draw();requestAnimationFrame(loop);}
+function start(){if(running)return;running=true;loop();}
+size();
+if(reduce){document.getElementById('looprm').hidden=false;draw();document.getElementById('loopplay').addEventListener('click',function(){this.disabled=true;this.textContent='Playing';start();});}else start();
+addEventListener('hashchange',()=>{setTimeout(()=>{size();draw();},0)});
+})();
+</script>
+
+</body></html>
